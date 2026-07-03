@@ -8,59 +8,59 @@ stabel_wrapper(n, p, rho, cutoff, iter, train.pcntg, SL.library, seed, p1, corr.
 
 ## Inputs for stable_wrapper
 
-n	Number of observations (sample size) generated in each simulation replicate.
+n:	Number of observations (sample size) generated in each simulation replicate.
 
-p	Total number of predictor variables generated in the simulated dataset.
+p:	Total number of predictor variables generated in the simulated dataset.
 
-rho	Correlation coefficient controlling the dependence among predictors.
+rho:	Correlation coefficient controlling the dependence among predictors.
 
-cutoff	Stability selection cutoff used by stabel.vs() to determine the final selected variables.
+cutoff:	Stability selection cutoff used by stabel.vs() to determine the final selected variables.
 
-iter	Number of simulation replications to perform.
+iter:	Number of simulation replications to perform.
 
-train.pcntg	Proportion of observations randomly allocated to the training dataset.
+train.pcntg:	Proportion of observations randomly allocated to the training dataset.
 
-SL.library	Vector of Super Learner algorithms used for the prediction stage in stabel.pred().
+SL.library:	Vector of Super Learner algorithms used for the prediction stage in stabel.pred().
 
-seed	Random seed used to ensure reproducibility of the STABEL procedures.
+seed:	Random seed used to ensure reproducibility of the STABEL procedures.
 
-p1	Number of true signal variables used when computing TPR and FDR (here, the first 8 predictors).
+p1:	Number of true signal variables used when computing TPR and FDR (here, the first 8 predictors).
 
-corr.type	Correlation structure for the simulated predictors. Options are "independent" and "ar1".
+corr.type:	Correlation structure for the simulated predictors. Options are "independent" and "ar1".
 
 ## Outputs for stable_wrapper
 
-TPR.avg	True Positive Rate for stabel using the average aggregation rule.
+TPR.avg:	True Positive Rate for stabel using the average aggregation rule.
 
-FDR.avg	False Discovery Rate for stabel using the average aggregation rule.
+FDR.avg:	False Discovery Rate for stabel using the average aggregation rule.
 
-TPR.union	True Positive Rate for stabel using the union aggregation rule.
+TPR.union:	True Positive Rate for stabel using the union aggregation rule.
 
-FDR.union	False Discovery Rate for stabel using the union aggregation rule.
+FDR.union:	False Discovery Rate for stabel using the union aggregation rule.
 
-TPR.SS.lasso	True Positive Rate for stability selection with LASSO.
+TPR.SS.lasso:	True Positive Rate for stability selection with LASSO.
 
-FDR.SS.lasso	False Discovery Rate for stability selection with LASSO.
+FDR.SS.lasso:	False Discovery Rate for stability selection with LASSO.
 
-TPR.t.lasso	True Positive Rate for the traditional LASSO model.
+TPR.t.lasso:	True Positive Rate for the traditional LASSO model.
 
-FDR.t.lasso	False Discovery Rate for the traditional LASSO model.
+FDR.t.lasso:	False Discovery Rate for the traditional LASSO model.
 
-rmse.avg	Root Mean Squared Error (RMSE) of the prediction model built using variables selected by stabel (average aggregation).
+rmse.avg:	Root Mean Squared Error (RMSE) of the prediction model built using variables selected by stabel (average aggregation).
 
-mae.avg	Mean Absolute Error (MAE) of the prediction model built using variables selected by stabel (average aggregation).
+mae.avg:	Mean Absolute Error (MAE) of the prediction model built using variables selected by stabel (average aggregation).
 
-rmse.union	RMSE of the prediction model built using variables selected by stabel (union aggregation).
+rmse.union:	RMSE of the prediction model built using variables selected by stabel (union aggregation).
 
-mae.union	MAE of the prediction model built using variables selected by STABEL (union aggregation).
+mae.union:	MAE of the prediction model built using variables selected by STABEL (union aggregation).
 
-rmse.SS.lasso	RMSE of the prediction model built using variables selected by stability selection with LASSO.
+rmse.SS.lasso:	RMSE of the prediction model built using variables selected by stability selection with LASSO.
 
-mae.SS.lasso	MAE of the prediction model built using variables selected by stability selection with LASSO.
+mae.SS.lasso:	MAE of the prediction model built using variables selected by stability selection with LASSO.
 
-rmse.t.lasso	RMSE of the prediction model built using variables selected by the traditional LASSO model.
+rmse.t.lasso:	RMSE of the prediction model built using variables selected by the traditional LASSO model.
 
-mae.t.lasso	MAE of the prediction model built using variables selected by the traditional LASSO model.
+mae.t.lasso:	MAE of the prediction model built using variables selected by the traditional LASSO model.
 
 ## Running time for stable_wrapper
 
@@ -76,55 +76,49 @@ This script reproduces the real-data analysis presented in the manuscript using 
 
 ## Analysis Workflow:
 
-Step	Description
+Load gene expression data:	Import the normalized gene expression matrix and associated clinical annotations.
 
-Load gene expression data	Import the normalized gene expression matrix and associated clinical annotations.
+Data preprocessing:	Replace missing gene names with unique identifiers, sort genes alphabetically, and remove duplicate gene entries while retaining the first occurrence.
 
-Data preprocessing	Replace missing gene names with unique identifiers, sort genes alphabetically, and remove duplicate gene entries while retaining the first occurrence.
+Data transformation:	Transpose the expression matrix so that rows represent patients and columns represent genes.
 
-Data transformation	Transpose the expression matrix so that rows represent patients and columns represent genes.
+Outcome construction:	Extract PTCL-NOS samples, remove unclassified cases, and encode the response variable as binary (GATA3 = 0, TBX21 = 1).
 
-Outcome construction	Extract PTCL-NOS samples, remove unclassified cases, and encode the response variable as binary (GATA3 = 0, TBX21 = 1).
+Merge datasets:	Merge the gene expression matrix with the clinical outcome information.
 
-Merge datasets	Merge the gene expression matrix with the clinical outcome information.
+Training/testing split:	Randomly divide the data into 60% training and 40% testing sets using a fixed random seed.
 
-Training/testing split	Randomly divide the data into 60% training and 40% testing sets using a fixed random seed.
+Variance filtering:	Calculate gene variances using only the training data and retain the 10,000 most variable genes. The testing set is restricted to the same genes.
 
-Variance filtering	Calculate gene variances using only the training data and retain the 10,000 most variable genes. The testing set is restricted to the same genes.
+Sure Independence Screening (SIS):	Apply SIS to the training data and retain the 30 most informative genes. The same subset is extracted from the testing data.
 
-Sure Independence Screening (SIS)	Apply SIS to the training data and retain the 30 most informative genes. The same subset is extracted from the testing data.
+Variable selection:	Apply stabel using LASSO, Random Forest, and sparseSVM base learners. Comparison methods include traditional LASSO, modified LASSO, and stability selection with LASSO (stabs).
 
-Variable selection	Apply stabel using LASSO, Random Forest, and sparseSVM base learners. Comparison methods include traditional LASSO, modified LASSO, and stability selection with LASSO (stabs).
+Prediction:	Build prediction models using the selected variables and evaluate performance on the independent testing dataset using Super Learner.
 
-Prediction	Build prediction models using the selected variables and evaluate performance on the independent testing dataset using Super Learner.
-
-Performance evaluation	Compare methods using prediction accuracy, AUC, sensitivity, specificity, and sensitivity at the target specificity.
+Performance evaluation:	Compare methods using prediction accuracy, AUC, sensitivity, specificity, and sensitivity at the target specificity.
 
 ## Variable Selection Methods:
 
-Method	Description
+stabel:	Stability-based ensemble variable selection using LASSO, Random Forest, and sparseSVM with average aggregation.
 
-stabel	Stability-based ensemble variable selection using LASSO, Random Forest, and sparseSVM with average aggregation.
+Random Forest Model:	Prediction using the stabel-selected variables with Random Forest as the only Super Learner algorithm.
 
-Random Forest Model	Prediction using the stabel-selected variables with Random Forest as the only Super Learner algorithm.
+Traditional LASSO:	Penalized logistic regression with the tuning parameter selected by cross-validation.
 
-Traditional LASSO	Penalized logistic regression with the tuning parameter selected by cross-validation.
+Modified LASSO:	LASSO with a manually adjusted penalty parameter to select the same number of variables as STABEL.
 
-Modified LASSO	LASSO with a manually adjusted penalty parameter to select the same number of variables as STABEL.
-
-Stability Selection with LASSO	Stability selection implemented using the stabs package.
+Stability Selection with LASSO:	Stability selection implemented using the stabs package.
 
 ## Performance Metrics:
 
-Output	Description
+prediction.accuracy:	Overall classification accuracy on the testing dataset.
 
-prediction.accuracy	Overall classification accuracy on the testing dataset.
+auc:	Area under the ROC curve.
 
-auc	Area under the ROC curve.
+sensitivity:	True positive rate.
 
-sensitivity	True positive rate.
+specificity:	True negative rate.
 
-specificity	True negative rate.
-
-sensitivity.at.specificity	Sensitivity evaluated at the pre-specified target specificity (0.985).
+sensitivity.at.specificity:	Sensitivity evaluated at the pre-specified target specificity (0.985).
 
