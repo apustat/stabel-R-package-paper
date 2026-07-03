@@ -1,11 +1,12 @@
-README Document for stabel
+## README Document for stabel
+
 This readme file explains three R scripts, two for simulation studies and one for case study analysis for stabel (Stability Selection with Ensemble Learning) package paper. The method can be run by sourcing the scripts and setting the required input parameters in the R environment.
 
-1.	Script 1 (Simulation Gaussian additive model.R)
+## 1.	Script 1 (Simulation Gaussian additive model.R)
 
 stabel_wrapper(n, p, rho, cutoff, iter, train.pcntg, SL.library, seed, p1, corr.type = c("independent","ar1"))
 
-Inputs for stable_wrapper
+## Inputs for stable_wrapper
 
 n	Number of observations (sample size) generated in each simulation replicate.
 
@@ -27,7 +28,7 @@ p1	Number of true signal variables used when computing TPR and FDR (here, the fi
 
 corr.type	Correlation structure for the simulated predictors. Options are "independent" and "ar1".
 
-Outputs for stable_wrapper
+## Outputs for stable_wrapper
 
 TPR.avg	True Positive Rate for stabel using the average aggregation rule.
 
@@ -61,21 +62,22 @@ rmse.t.lasso	RMSE of the prediction model built using variables selected by the 
 
 mae.t.lasso	MAE of the prediction model built using variables selected by the traditional LASSO model.
 
-Running time for stable_wrapper
+## Running time for stable_wrapper
 
 It takes approximately 44 seconds to complete a single iteration (iter=1) when n=200, p=1000, rho=0, and p1=8.
 
-2.	Script 2 (Simulation Gaussian additive model custom correlation.R)
+## 2.	Script 2 (Simulation Gaussian additive model custom correlation.R)
 
 All of the arguments described for Script 1 are also applicable to Script 2, with the exception of the “corr.type” argument. In Script 2, no predefined correlation structure is used to generate the simulated data. Instead, the correlation structure is estimated empirically from the training set of the PTCL-NOS dataset and then used to generate the synthetic predictors. The output variables produced by stabel_wrapper() are identical to those in Script 1.
 
-4.	Script 3 (PTCL-NOS analysis.R)
+## 4.	Script 3 (PTCL-NOS analysis.R)
 
 This script reproduces the real-data analysis presented in the manuscript using the PTCL-NOS gene expression dataset. The objective is to identify a parsimonious set of genes for distinguishing the GATA3 and TBX21 molecular subtypes of PTCL-NOS and to compare the predictive performance of stabel with several competing variable selection methods.
 
-Analysis Workflow:
+## Analysis Workflow:
 
 Step	Description
+
 Load gene expression data	Import the normalized gene expression matrix and associated clinical annotations.
 
 Data preprocessing	Replace missing gene names with unique identifiers, sort genes alphabetically, and remove duplicate gene entries while retaining the first occurrence.
@@ -98,9 +100,10 @@ Prediction	Build prediction models using the selected variables and evaluate per
 
 Performance evaluation	Compare methods using prediction accuracy, AUC, sensitivity, specificity, and sensitivity at the target specificity.
 
-Variable Selection Methods:
+## Variable Selection Methods:
 
 Method	Description
+
 stabel	Stability-based ensemble variable selection using LASSO, Random Forest, and sparseSVM with average aggregation.
 
 Random Forest Model	Prediction using the stabel-selected variables with Random Forest as the only Super Learner algorithm.
@@ -111,9 +114,10 @@ Modified LASSO	LASSO with a manually adjusted penalty parameter to select the sa
 
 Stability Selection with LASSO	Stability selection implemented using the stabs package.
 
-Performance Metrics:
+## Performance Metrics:
 
 Output	Description
+
 prediction.accuracy	Overall classification accuracy on the testing dataset.
 
 auc	Area under the ROC curve.
