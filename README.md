@@ -70,7 +70,7 @@ It takes approximately 44 seconds to complete a single iteration (iter=1) when n
 
 All of the arguments described for Script 1 are also applicable to Script 2, with the exception of the “corr.type” argument. In Script 2, no predefined correlation structure is used to generate the simulated data. Instead, the correlation structure is estimated empirically from the training set of the PTCL-NOS dataset and then used to generate the synthetic predictors. The output variables produced by stabel_wrapper() are identical to those in Script 1.
 
-## 4.	Script 3 (PTCL-NOS analysis.R)
+## 3.	Script 3 (PTCL-NOS analysis.R)
 
 This script reproduces the real-data analysis presented in the manuscript using the PTCL-NOS gene expression dataset. The objective is to identify a parsimonious set of genes for distinguishing the GATA3 and TBX21 molecular subtypes of PTCL-NOS and to compare the predictive performance of stabel with several competing variable selection methods.
 
