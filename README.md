@@ -1,6 +1,6 @@
 ## README Document for stabel
 
-This readme file explains three R scripts, two for simulation studies and one for case study analysis for stabel (Stability Selection with Ensemble Learning) package paper. The method can be run by sourcing the scripts and setting the required input parameters in the R environment.
+This readme file explains three R scripts, two for simulation studies and one for case study analysis for stabel (Stability Selection with Ensemble Learning) package paper. The method can be run by sourcing the scripts and setting the required input parameters in the R environment. The original methodology paper can be downloaded from https://link.springer.com/article/10.1007/s12561-026-09516-w .
 
 ## 1.	Script 1 (Simulation Gaussian additive model.R)
 
